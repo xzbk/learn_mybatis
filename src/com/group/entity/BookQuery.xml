@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="book.query">
+	<!-- 默认mybatis表的列名和实体类的属性名必须一样，才能自动对应，否则就要手动配置映射关系 -->
+	<resultMap type="com.group.entity.Book" id="bookMap">
+	  <id column="book_id" property="id" javaType="java.lang.Integer"/>
+	   <result column="book_name" property="bookName" javaType="java.lang.String"/>
+	   <result column="book_page" property="bookPage" javaType="java.lang.Integer"/>
+	   <result column="book_price" property="bookPrice" javaType="java.lang.Double"/>
+	</resultMap>
+	<!-- 第一种映射方式，别名方式 -->
+	<!-- <select id="findBooks" resultType="sdibt.group.entity.Book">
+	    select id,book_name as bookName,book_page as bookPage,book_price as bookPrice from book
+	</select> -->
+	<!-- 返回Book类型 -->
+	<select id="findBooks" resultMap="bookMap">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	</select>
+	<!-- 返回map类型 -->
+	<select id="allMap" resultType="map">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	</select>
+	<!-- 带一个条件的查询，查询id等于1的那本书,获取参数的标准写法:#{变量名},如果只有一个变量，参数名可以随便写  -->
+	<select id="condition1">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	    WHERE
+	    	id = #{id }
+	</select>
+	<!-- 带多个条件的查询，名字包含ink，并且页数大于500页的书籍  -->
+	<select id="condition2" parameterType="map" resultType="map">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	    WHERE
+	    	book_name like #{bookName}
+	    AND
+	    	book_page > #{bookPage}
+	</select>
+	<!-- 如果查询条件不确定的情况下，sql语句就无法确定，动态sql查询名字包含？？？，且页数大于？？？的书籍，但是要根据条件是否为null来判断有几个条件  -->
+	<select id="condition3" parameterType="map" resultType="map">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	    WHERE
+	    <if test="bookName!=null">
+	        book_name like #{bookName}
+	    </if>
+	    <if test="bookPage!=null">
+	    AND
+	    	book_page > #{bookPage}
+	    </if>
+	</select>
+	<!-- 动态sql改造，保证语法正确,trim标签里面如果有内容，加上prefix前缀，如果where后面直接跟上prefixOverrides属性对应的值，将其删掉  -->
+	<select id="condition4" parameterType="map" resultType="map">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+		<trim prefix="where" prefixOverrides="and">
+		    <if test="bookName!=null">
+		        book_name like #{bookName}
+		    </if>
+		    <if test="bookPage!=null">
+		    AND
+		    	book_page > #{bookPage}
+		    </if>
+		</trim>
+	</select>
+</mapper>

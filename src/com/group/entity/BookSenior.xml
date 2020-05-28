@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="book.senior">
+	<!-- 默认mybatis表的列名和实体类的属性名必须一样，才能自动对应，否则就要手动配置映射关系 -->
+	<resultMap type="com.group.entity.Book" id="bookMap">
+	  <id column="book_id" property="id" javaType="java.lang.Integer"/>
+	   <result column="book_name" property="bookName" javaType="java.lang.String"/>
+	   <result column="book_page" property="bookPage" javaType="java.lang.Integer"/>
+	   <result column="book_price" property="bookPrice" javaType="java.lang.Double"/>
+	</resultMap>
+	<!-- selectOne -->
+	<select id="oneBook" parameterType="int" resultType="map">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	    WHERE
+	    	id = #{id}
+	</select>
+	<!-- 查询id在(1,2,3,4)内的所有记录 -->
+	<select id="in" resultType="map" parameterType="list">
+	    SELECT
+	    	*
+	    FROM
+	    	book
+	    WHERE
+	    	id in
+		<foreach collection="list" open="(" close=")" separator="," item="item">
+		    #{item}
+		</foreach>
+	</select>
+	<!-- 调用存储过程的测试 -->
+	<!-- <insert id="procedure" parameterType="cn.domain.Person" statementType="CALLABLE">
+		{call p1(#{name},#{addr})}
+	</insert> -->
+	<!-- 调用有一个有返回值的存储过程
+		 经过测试，对于输出类型的参数，必须要设置mode=OUT,jdbcType=...才可以设置到指定的字段上
+	 -->
+	<!-- <insert id="procedure2" parameterType="cn.domain.Person" statementType="CALLABLE">
+		{call p1(#{name},#{addr},#{id,mode=OUT,jdbcType=VARCHAR})}
+	</insert> -->
+	<!-- 多表关联查询   -->
+	<select id="findBookByTypeId" resultType="map">
+	    SELECT 
+	    	book_name,
+	    	type_name
+	    FROM
+	    	book
+	    INNER JOIN
+	    	book_type
+	    ON
+	    	book.book_type = book_type.id
+	    WHERE
+	    	type_name = 'calculator'
+	</select>
+</mapper>

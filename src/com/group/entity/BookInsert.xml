@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须定义，非绑定到类或是接口的方式 -->
+<mapper namespace="book.insert">
+	<!-- 默认mybatis表的列名和实体类的属性名必须一样，才能自动对应，否则就要手动配置映射关系 -->
+	<resultMap type="com.group.entity.Book" id="bookMap">
+	  <id column="book_id" property="id" javaType="java.lang.Integer"/>
+	   <result column="book_name" property="bookName" javaType="java.lang.String"/>
+	   <result column="book_page" property="bookPage" javaType="java.lang.Integer"/>
+	   <result column="book_price" property="bookPrice" javaType="java.lang.Double"/>
+	</resultMap>
+	<!-- insert语句 -->
+	<insert id="insert1" parameterType="map">
+	    INSERT INTO
+	    	book(
+	    		book_name,
+	    		book_page
+	   	)
+	    VALUES(
+	    	<!-- 纠正错误：无效的列类型111 -->
+	    	#{bookName,jdbcType=VARCHAR},
+	    	#{bookPage}
+	    )
+	</insert>
+	<!-- insert语句，id自动生成，如果是mysql数据库支持自动递增，insert语句正常写，id那一列不需要写。Oracle不支持，需要定义一个序列
+	：create sequence book_seq start with 1 increment by 1 -->
+	<insert id="insert2" parameterType="map">
+	    <selectKey keyProperty="id" order="BEFORE">
+	        select book_seq.nextval from dual
+	    </selectKey>
+	    INSERT INTO
+	    	book(
+	    		id,
+	    		book_name,
+	    		book_page
+	   	)
+	    VALUES(
+	    	#{id}
+	    	#{bookName},
+	    	#{bookPage}
+	    )
+	</insert>
+</mapper>
