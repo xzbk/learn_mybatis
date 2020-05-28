@@ -22,7 +22,7 @@
 TestBaseQuery.test6
 ## 插入
 1. 普通insert
-TestBaseInsert.test1
+`TestBaseInsert.test1`
 2. insert,自动生成id(oracle数据库索引使用)
 `TestBaseInsert.test2`
 ## 更新
@@ -30,7 +30,7 @@ TestBaseInsert.test1
 `TestBaseUpdate.test1`
 ## 删除
 1. 普通删除
-`estBaseDelete.test1`
+`TestBaseDelete.test1`
 # 高级部分
 1. selectOne选择一条记录
 `TestSenior.testSelectOne`
