@@ -8,7 +8,7 @@
 # 基础部分
 ## 封装MybatisUtils
 ## 查询
-1. 返回值使用的是resultMap	
+1. 返回值使用的是resultMap  
 `TestBaseQuery.test1`
 2. 返回值使用的是map
 `TestBaseQuery.test2`
